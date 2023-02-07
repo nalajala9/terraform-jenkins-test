@@ -82,7 +82,7 @@ resource "aws_security_group" "jenkins-sg" {
     description = "Allow http traffic from anywhere"
     from_port = "80"
     to_port = "80"
-    protocol = "http"
+    protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
@@ -90,7 +90,7 @@ resource "aws_security_group" "jenkins-sg" {
     description = "Allow http traffic from anywhere"
     from_port = "443"
     to_port = "443"
-    protocol = "https"
+    protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   # We want the Jenkins EC2 instance to being able to talk to the internet

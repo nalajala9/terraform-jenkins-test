@@ -1,0 +1,124 @@
+echo "export M2_HOME=/opt/apache-maven-3.6.3" >> ~/.bashrc
+echo "export PATH=$M2_HOME/bin:$PATH" >> ~/.bashrc
+
+
+ echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> ~/.bashrc
+ echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+
+
+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
+in jenkins global tool path,  give as git 
+
+
+
+export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+
+
+sudo sed -i 's/connector port="8080"/connector port="8081"/I' /opt/tomcat/conf/server.xml
+
+
+[Unit]
+Description=Apache Tomcat
+After=network.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+Environment=CATALINA_PID=/opt/tomcat/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+ExecReload=/bin/kill $MAINPID
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+if these are not working under ubuntu , change to root and apply
+
+vi /opt/tomcat/webapps/manager/META-INF/context.xml
+add <!--   --> (comment them out)
+
+<!--
+<Valve className="org.apache.catalina.valves.RemoteAddrValve"
+allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+-->
+
+
+vi /opt/tomcat/conf/tomcat-users.xml
+
+add below lines above </tomcat-users> line
+
+  <role rolename="tomcat"/>
+  <role rolename="manager-gui"/>
+  <role rolename="admin-gui"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-jmx"/>
+  <user username="admin" password="admin" roles="tomcat,manager-gui,admin-gui,manager-script,manager-jmx"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "maven-3.6.3"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/doct15/example-tomcat-war.git'
+
+                // Run Maven on a Unix agent.
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    archiveArtifacts 'target/*.war'
+                    script {
+                        deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://23.23.34.104:8081')], contextPath: '/pipeline', onFailure: false, war: 'target/*.war'
+                        
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+here whatever you give in context path .the war file will be under that
+
+

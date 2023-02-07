@@ -1,27 +1,37 @@
 name: Installation of jenkins using terraform 
 on: [push]
 jobs:
-  Installtion-steps:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - run: sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
-      - run: terraform -v
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: ls ${{ github.workspace }}  
-      - run: echo "$AWS_ACCESS_KEY_ID"
-      - run: terraform init
-      - run: terraform validate
-      # - name: Terraform Apply
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: terraform apply -auto-approve -input=false
-      - name: Terraform Destroy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform destroy -auto-approve -input=false
+  job1:
+    Installtion and validation:
+      runs-on: ubuntu-latest
+      steps:
+        - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+        - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+        - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+        - run: sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+        - run: terraform -v
+        - name: Check out repository code
+          uses: actions/checkout@v3
+        - run: ls ${{ github.workspace }}  
+        - run: echo "$AWS_ACCESS_KEY_ID"
+        - run: terraform init
+        - run: terraform validate
+  job2:      
+    apply:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Terraform Apply
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          run: terraform apply -auto-approve -input=false
+
+  job3:      
+    destroy:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Terraform Destroy
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          run: terraform destroy -auto-approve -input=false

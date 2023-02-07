@@ -55,7 +55,7 @@ data "aws_vpc" "default" {
 # Configure another resource security groups
 resource "aws_security_group" "jenkins-sg" {
   # Name, Description and the VPC of the Security Group
-  name = "jenkins_sg"
+  name = "jenkins_sg1"
   description = "Security group for jenkins server"
   vpc_id = data.aws_vpc.default.id
 

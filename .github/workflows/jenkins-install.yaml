@@ -16,22 +16,21 @@ jobs:
         - run: echo "$AWS_ACCESS_KEY_ID"
         - run: terraform init
         - run: terraform validate
-  job2:      
-    apply:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Terraform Apply
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          run: terraform apply -auto-approve -input=false
-
-  job3:      
-    destroy:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Terraform Destroy
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          run: terraform destroy -auto-approve -input=false
+  # job2:      
+  #   apply:
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - name: Terraform Apply
+  #         env:
+  #           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         run: terraform apply -auto-approve -input=false
+  # job3:      
+  #   destroy:
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - name: Terraform Destroy
+  #         env:
+  #           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         run: terraform destroy -auto-approve -input=false

@@ -11,11 +11,12 @@ jobs:
       - run: terraform -v
       - name: Check out repository code
         uses: actions/checkout@v3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: ls ${{ github.workspace }}  
       - run: echo "$AWS_ACCESS_KEY_ID"
       - run: terraform init
       - run: terraform validate
-      - run: terraform plan {{ secrets.AWS_ACCESS_KEY_ID }} {{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Terraform apply
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform apply -auto-approve -input=false

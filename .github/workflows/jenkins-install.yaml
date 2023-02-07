@@ -17,3 +17,4 @@ jobs:
       - run: ls ${{ github.workspace }}  
       - run: terraform init
       - run: terraform validate
+      - run: terraform plan

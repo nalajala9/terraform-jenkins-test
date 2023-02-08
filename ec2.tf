@@ -11,6 +11,7 @@ terraform {
 provider "aws" {
   region = "ap-south-1"
 }
+
 # Configure the AWS instance
 resource "aws_instance" "web" {
   ami = "ami-06984ea821ac0a879"

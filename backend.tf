@@ -3,5 +3,6 @@ terraform {
     bucket = "tfstore97"
     key    = "files/"
     region = "ap-south-1"
+    profile = "default"
   }
 }
